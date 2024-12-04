@@ -14,6 +14,8 @@ export class MyDriver extends Homey.Driver {
   client: ComfortCloudClient | null | undefined = undefined;
   ignoreSettings:boolean=false;
   clientMutex:Mutex = new Mutex();
+  actionCardsInitiated: boolean = false;
+  actionCardsMutex:Mutex = new Mutex();
 
   // From https://github.com/Magnusri/homey-panasonic-comfort-cloud-alt/blob/master/drivers/aircon/driver.ts
   async getLatestAppVersion(): Promise<string> {
@@ -137,6 +139,7 @@ export class MyDriver extends Homey.Driver {
       changeOperationMode.registerRunListener(async (args) => {
         await args.device.postToService({ operation_mode: args.mode });
       });
+      this.log("driver actioncards have been initialized");
     }
 
   /**

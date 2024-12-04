@@ -1,6 +1,7 @@
 import Homey from 'homey';
 import { MyDriver } from './driver';
 import { Power, Parameters, OperationMode, EcoMode, AirSwingLR, AirSwingUD, FanAutoMode, FanSpeed, NanoeMode, Device } from 'panasonic-comfort-cloud-client';
+import { Mutex } from 'async-mutex';
 
 function getParam(value:any, transform: (v:any) => any) : any {
   if (value === undefined)
@@ -117,7 +118,7 @@ export class MyDevice extends Homey.Device {
     changeEcoMode.registerRunListener(async (args) => {
       await this.postToService({ eco_mode: args.mode });
     });
-
+    this.log("device actioncards have been initialized");
   }
 
   /**
@@ -152,7 +153,14 @@ export class MyDevice extends Homey.Device {
     }
 
     // TO BE DEPRECATED: Do not initialize action cards from the device (since devices::onInit is called for every device) but from drivers::onInit
-    await this.initActionCards();
+    if (this.driver.actionCardsInitiated === false) {
+      await this.driver.actionCardsMutex.runExclusive(async () => {
+        if (this.driver.actionCardsInitiated === false) {
+          await this.initActionCards();
+          this.driver.actionCardsInitiated = true;
+        }
+      });
+    }
 
     const settings = this.getSettings();
     this.alwaysOn = settings.alwayson;
