@@ -16,6 +16,7 @@ export class MyDevice extends Homey.Device {
   timer: NodeJS.Timer|null = null; 
   alwaysOn: boolean = false;
   fetchMutex:Mutex = new Mutex();
+  fetchinterval: number = 60;
 
   async setCap<T>(name:string, value:T) {
     // Try adding the capability if it does not exist
@@ -68,7 +69,7 @@ export class MyDevice extends Homey.Device {
   }
   
   async fetchFromService(forced:boolean) {
-    // this.log("fetchFromService("+forced+")");
+    this.log("fetchFromService("+forced+")");
     let device:Device|null;
     try {
       device = await this.driver.invokeClient(async c => {
@@ -118,7 +119,7 @@ export class MyDevice extends Homey.Device {
       if (this.timer)
         this.homey.clearInterval(this.timer);
       await this.fetchFromService(true);
-      this.timer = this.homey.setInterval(() => this.fetchFromService(false), 60000);
+      this.timer = this.homey.setInterval(() => this.fetchFromService(false), this.fetchinterval * 1000);
     });
   }
 
@@ -205,6 +206,10 @@ export class MyDevice extends Homey.Device {
       3000
     );
 
+    const settings = this.getSettings();
+    this.alwaysOn = settings.alwayson;
+    this.fetchinterval = settings.fetchinterval;
+
     try {
       await this.fetchAndRestartTimer();
     }
@@ -216,17 +221,13 @@ export class MyDevice extends Homey.Device {
     }
 
     // TO BE DEPRECATED: Do not initialize action cards from the device (since devices::onInit is called for every device) but from drivers::onInit
-    if (this.driver.actionCardsInitiated === false) {
-      await this.driver.actionCardsMutex.runExclusive(async () => {
-        if (this.driver.actionCardsInitiated === false) {
-          await this.initActionCards();
-          this.driver.actionCardsInitiated = true;
-        }
-      });
-    }
-
-    const settings = this.getSettings();
-    this.alwaysOn = settings.alwayson;
+    // Make sure device action cards are initialized only once in case of multiple devices
+    await this.driver.actionCardsMutex.runExclusive(async () => {
+      if (this.driver.actionCardsInitiated === false) {
+        await this.initActionCards();
+        this.driver.actionCardsInitiated = true;
+      }
+    });
 
     this.log("Device '"+this.id+"' has been initialized");
   }
@@ -255,6 +256,10 @@ export class MyDevice extends Homey.Device {
     if (changedKeys.toString().includes('alwayson')) {
       this.alwaysOn = Boolean(newSettings.alwayson);
       this.log("    alwayson changed to: ", this.alwaysOn);
+    }
+    if (changedKeys.toString().includes('fetchinterval')) {
+      this.fetchinterval = Number(newSettings.fetchinterval);
+      this.log("    fetchinterval changed to: ", this.fetchinterval);
     }
   }
 
