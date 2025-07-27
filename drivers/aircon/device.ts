@@ -111,7 +111,7 @@ export class MyDevice extends Homey.Device {
   }
   
   async fetchFromService(forced:boolean) {
-    this.log("fetchFromService("+forced+")");
+    // this.log("fetchFromService("+forced+")");
     let device:Device|null;
     try {
       device = await this.driver.invokeClient(async c => {
