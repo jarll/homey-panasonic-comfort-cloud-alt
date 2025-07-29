@@ -143,8 +143,10 @@ export class MyDevice extends Homey.Device {
       airSwingLR = AirSwingLR[device.airSwingLR];
 
     await this.setCap('onoff', device.operate == Power.On);
-    if (device.insideTemperature != 126)
+    if (device.insideTemperature != 126) {
       await this.setCap('measure_temperature', device.insideTemperature);
+      await this.setCap('measure_temperature_inside', device.insideTemperature);
+    }
     await this.setCap('measure_temperature_outside', device.outTemperature);
     await this.setCap('target_temperature', device.temperatureSet);
     await this.setCap('operation_mode', OperationMode[device.operationMode]);

@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "net.schmidt-cisternas.pcc-alt",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -564,6 +564,7 @@
       "capabilities": [
         "target_temperature",
         "measure_temperature",
+        "measure_temperature_inside",
         "measure_temperature_outside",
         "onoff",
         "operation_mode",
@@ -859,11 +860,11 @@
         "no": "Snitt W per time"
       }
     },
-    "measure_temperature_outside": {
+    "measure_temperature_inside": {
       "type": "number",
       "title": {
-        "en": "Outside Temperature",
-        "no": "Temperatur Ute"
+        "en": "Inside Temperature",
+        "no": "Temperatur inne"
       },
       "uiComponent": "sensor",
       "units": {
@@ -872,11 +873,22 @@
       "icon": "assets/measure_temperature.svg",
       "getable": true,
       "setable": false,
-      "insights": true,
-      "insightsTitleTrue": {
-        "en": "Temperature Outside",
-        "no": "Temperatur Ute"
-      }
+      "insights": false
+    },
+    "measure_temperature_outside": {
+      "type": "number",
+      "title": {
+        "en": "Outside Temperature",
+        "no": "Temperatur ute"
+      },
+      "uiComponent": "sensor",
+      "units": {
+        "en": "°C"
+      },
+      "icon": "assets/measure_temperature.svg",
+      "getable": true,
+      "setable": false,
+      "insights": true
     },
     "nanoe_mode": {
       "type": "enum",
