@@ -58,6 +58,8 @@ export class MyDevice extends Homey.Device {
 
     // Get today's history data for the device
     let historyData = await client.getDeviceHistoryData(device.guid, new Date(), 0, timeZone);
+    if (!historyData)
+      return;
     
     // Filter out the -255 values, which are used to indicate hours that has not passed yet in the current day
     let historyWithData = historyData.historyDataList.filter((i: any) => i.consumption != -255);
@@ -176,6 +178,10 @@ export class MyDevice extends Homey.Device {
     });
   }
 
+  async thermostatMode(values: {[x:string]:any}) {
+    this.log('thermostatMode ignored:', values);
+  }
+
   async postToService(values: {[x:string]:any}) {
     this.log('postToService:', values);
     if (this.alwaysOn && values['onoff'] == Power.Off) {
@@ -256,6 +262,14 @@ export class MyDevice extends Homey.Device {
         'nanoe_mode'
       ],
       values => this.postToService(values),
+      3000
+    );
+
+    this.registerMultipleCapabilityListener(
+      [
+        'thermostat_mode'
+      ],
+      values => this.thermostatMode(values),
       3000
     );
 
