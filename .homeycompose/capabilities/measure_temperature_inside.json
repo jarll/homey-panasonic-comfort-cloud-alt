@@ -2,7 +2,7 @@
   "type": "number",
   "title": {
     "en": "Inside Temperature",
-    "no": "Temperatur Inne"
+    "no": "Temperatur Inne1"
   },
   "uiComponent": "sensor",
   "units": { "en": "°C" },
@@ -12,6 +12,6 @@
   "insights": true,
   "insightsTitleTrue": {
     "en": "Temperature Inside",
-    "no": "Temperatur Inne"
+    "no": "Temperatur Inne2"
   }
 }

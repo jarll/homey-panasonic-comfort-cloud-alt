@@ -1,8 +1,8 @@
 {
   "type": "number",
   "title": {
-    "en": "Inside Temperature",
-    "no": "Temperatur Inne"
+    "en": "Inside Temperature34",
+    "no": "Temperatur Inne34"
   },
   "uiComponent": null,
   "units": { "en": "°C" },
