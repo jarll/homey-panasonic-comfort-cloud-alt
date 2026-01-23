@@ -13,6 +13,12 @@ class MyApp extends Homey.App {
       this.homey.settings.set("log", this.logs.join(""));
     });
 
+    this.homey.flow.getConditionCard('operation-mode')
+      .registerRunListener(async (args) => {
+        const currentMode = args.device.getCapabilityValue('operation_mode');
+        return currentMode === args.mode;
+      });
+
     this.log('MyApp has been initialized');
   }
 
