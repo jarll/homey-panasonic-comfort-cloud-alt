@@ -34,6 +34,71 @@
     "url": "https://github.com/ugumba/homey-panasonic-comfort-cloud-alt/issues"
   },
   "flow": {
+    "conditions": [
+      {
+        "title": {
+          "en": "Operation mode is",
+          "no": "Driftsmodus er"
+        },
+        "titleFormatted": {
+          "en": "Operation mode !{{is|isn't}} [[mode]]",
+          "no": "Driftsmodus !{{er|er ikke}} [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=aircon"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "no": "Driftsmodus"
+            },
+            "values": [
+              {
+                "id": "Auto",
+                "label": {
+                  "en": "Auto",
+                  "no": "Automatisk"
+                }
+              },
+              {
+                "id": "Dry",
+                "label": {
+                  "en": "Dry",
+                  "no": "Tørr"
+                }
+              },
+              {
+                "id": "Cool",
+                "label": {
+                  "en": "Cool",
+                  "no": "Kjøling"
+                }
+              },
+              {
+                "id": "Heat",
+                "label": {
+                  "en": "Heat",
+                  "no": "Varme"
+                }
+              },
+              {
+                "id": "Fan",
+                "label": {
+                  "en": "Fan",
+                  "no": "Vifte"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "operation-mode"
+      }
+    ],
     "actions": [
       {
         "title": {
